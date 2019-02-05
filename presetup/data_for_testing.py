@@ -9,11 +9,11 @@ def create_player(name):
 
 def create_undead(name):
 
+    targets_health = name['health']
+    hit = int(targets_health) - 20
+
     undead = {'name': name,
               'health': 300}
-
-    def hit(target):
-        return target['health'] - 20
 
     return undead
 
@@ -32,4 +32,3 @@ class InvalidCharacterNameError(BaseException):
 
     def __init__(self, message):
         self.message = message
-
