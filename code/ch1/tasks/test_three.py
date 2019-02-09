@@ -1,9 +1,14 @@
-"""Test the Task data type."""
+
+"""
+Test the Task data type.
+"""
 
 from collections import namedtuple
 
+
 Task = namedtuple('Task', ['summary', 'owner', 'done', 'id'])
-Task.__new__.__defaults__ = (None, None, False, None)
+Task.__new__.__defaults__= (None, None, False, None)
+
 
 
 def test_defaults():
@@ -12,8 +17,9 @@ def test_defaults():
     t2 = Task(None, None, False, None)
     assert t1 == t2
 
+
 def test_member_access():
-    """Check .field functionality of namedtuple."""
+    """Check field functionality of namedtuple"""
     t = Task('buy milk', 'brian')
     assert t.summary == 'buy milk'
     assert t.owner == 'brian'

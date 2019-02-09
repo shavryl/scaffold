@@ -1,0 +1,4 @@
+{
+  "unit/test_slower.py::test_slow_stuff[7]": true,
+  "unit/test_slower.py::test_slow_stuff[9]": true
+}

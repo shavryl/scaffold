@@ -1,0 +1,5 @@
+[
+  "unit/test_capsys.py::test_greeting",
+  "unit/test_capsys.py::test_yikes",
+  "unit/test_capsys.py::test_capsys_disabled"
+]
