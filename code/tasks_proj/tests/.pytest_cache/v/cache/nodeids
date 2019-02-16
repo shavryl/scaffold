@@ -1,5 +1,3 @@
 [
-  "unit/test_capsys.py::test_greeting",
-  "unit/test_capsys.py::test_yikes",
-  "unit/test_capsys.py::test_capsys_disabled"
+  "unit/test_warnings.py::TestNonEmpty::test_delete_decreases_count[tiny]"
 ]

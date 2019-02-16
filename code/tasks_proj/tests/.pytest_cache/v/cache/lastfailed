@@ -1,4 +1,10 @@
 {
+  "unit/test_cheese.py::test_def_prefs_change_defaults": true,
+  "unit/test_cheese.py::test_def_prefs_change_expanduser": true,
+  "unit/test_cheese.py::test_def_prefs_change_home": true,
+  "unit/test_cheese.py::test_def_prefs_full": true,
   "unit/test_slower.py::test_slow_stuff[7]": true,
-  "unit/test_slower.py::test_slow_stuff[9]": true
+  "unit/test_slower.py::test_slow_stuff[9]": true,
+  "unit/test_warnings.py::TestNonEmpty::test_delete_decreases_count": true,
+  "unit/test_warnings.py::test_lame_function_2": true
 }
