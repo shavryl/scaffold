@@ -33,7 +33,14 @@ df.union(newDF)\
     .where(col("ORIGIN_COUNTRY_NAME") != "United States")\
     .show(1)
 
+df.rdd.getNumPartitions()
 
-df.orderBy(expr("count desc")).show(5)
-# sorting by different columns values
-df.orderBy(col("count").desc(), col("DEST_COUNTRY_NAME").asc()).show(5)
+df.repartition(5, col("DEST_COUNTRY_NAME")).coalesce(2)
+
+collectDF = df.limit(10)
+collectDF.take(5)
+collectDF.show(5, False)
+# returns an iterator !
+tt = list(collectDF.toLocalIterator())
+for t in tt:
+    print(t)
