@@ -40,7 +40,3 @@ df.repartition(5, col("DEST_COUNTRY_NAME")).coalesce(2)
 collectDF = df.limit(10)
 collectDF.take(5)
 collectDF.show(5, False)
-# returns an iterator !
-tt = list(collectDF.toLocalIterator())
-for t in tt:
-    print(t)
