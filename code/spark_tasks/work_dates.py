@@ -46,4 +46,7 @@ cleanDateDF = spark.range(1).select(
     to_date(lit("2017-20-12"), dateFormat).alias("date2"))
 cleanDateDF.createOrReplaceTempView("dataTable2")
 
-cleanDateDF.select(to_timestamp(col("date"), dateFormat)).show()
+cleanDateDF.select(to_timestamp(col("date"), dateFormat)).show(1)
+
+cleanDateDF.filter(col("date2") > lit("2017-12-12")).show()
+
