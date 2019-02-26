@@ -17,13 +17,13 @@ df = spark.read.format("csv")\
 df.cache()
 df.createOrReplaceTempView("dfTable")
 
-df.groupBy("InvoiceNo", "CustomerId").count().show()
+df.groupBy("InvoiceNo", "CustomerId").count()
 
 df.groupBy("InvoiceNo").agg(
     count("Quantity").alias("quan"),
-    expr("count(Quantity)")).show()
+    expr("count(Quantity)"))
 
-df.groupBy("InvoiceNo").agg(expr("avg(Quantity)"),expr("stddev_pop(Quantity)")).show()
+df.groupBy("InvoiceNo").agg(expr("avg(Quantity)"),expr("stddev_pop(Quantity)"))
 
 # add date column and convert invoice date into a column with date information
 dfWithDate = df.withColumn("date", to_date(col("InvoiceDate"), "MM/d/yyyy H:mm"))
@@ -38,13 +38,11 @@ windowSpec = Window\
     .orderBy(desc("Quantity"))\
     .rowsBetween(Window.unboundedPreceding, Window.currentRow)
 
-
 # use agg function to learn more about each specific customer
 # example establishing the maximum purchase quantity over all time
 # we indicate the window specification that defines to which
 # frames of data this function will apply
 maxPurchaseQuantity = max(col("Quantity")).over(windowSpec)
-
 
 # we can now use this in a DF select statement
 # before we will create the purchase quantity rank
@@ -54,12 +52,30 @@ purchaseDenseRank = dense_rank().over(windowSpec)
 purchaseRank = rank().over(windowSpec)
 
 
+dfWithDate.where("CustomerId IS NOT NULL").orderBy("CustomerId")\
+    .select(
+        col("CustomerId"),
+        col("date"),
+        col("Quantity"),
+        purchaseRank.alias("quantityRank"),
+        purchaseDenseRank.alias("quantityDenseRank"),
+        maxPurchaseQuantity.alias("maxPurchaseQuantity"))
 
 
+dfNoNull = dfWithDate.drop()
+dfNoNull.createOrReplaceTempView("dfNoNull")
 
 
+# rollup that creates DF that includes the grand total over all dates
+# the grand total for each date in the DF and the subtotal for each
+# country on each date in the DF
+rolledUpDF = dfNoNull.rollup("Date", "Country").agg(sum("Quantity"))\
+    .selectExpr("Date", "Country", "`sum(Quantity)` as total_quantity")\
+    .orderBy("Date")
 
 
+cubedDF = dfNoNull.cube("Date", "Country").agg(sum(col("Quantity")))\
+    .select("Date", "Country", "sum(Quantity)")\
+    .orderBy("Date")
 
-
-
+cubedDF.filter((col("Country") == "France") & (col("Date") >= "2010-12-01")).show()
