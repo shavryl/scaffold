@@ -1,7 +1,7 @@
 from pyspark.sql.types import StructField, StructType, StringType, LongType
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
-from pyspark.sql.functions import *
+from pyspark.sql.functions import expr
 from pyspark.sql import Row
 
 
@@ -89,11 +89,14 @@ graduateProgram.join(person, joinExpression, joinType)
 # right DF. This will cause an absolute explosion in the number of rows contained
 # in the resulting DF.
 joinType = 'cross'
-graduateProgram.join(person, joinExpression, joinType).show()
+graduateProgram.join(person, joinExpression, joinType)
 
-person.crossJoin(graduateProgram).show()
+person.crossJoin(graduateProgram)
 
+person.withColumnRenamed("id", "personId")\
+    .join(sparkStatus, expr("array_contains(spark_status, id)")).explain()
 
+# problem to refer to a specific column when you have DF with duplicate column names
 
 
 
