@@ -78,4 +78,10 @@ cubedDF = dfNoNull.cube("Date", "Country").agg(sum(col("Quantity")))\
     .select("Date", "Country", "sum(Quantity)")\
     .orderBy("Date")
 
-cubedDF.filter((col("Country") == "France") & (col("Date") >= "2010-12-01")).show()
+cubedDF.filter((col("Country") == "France") & (col("Date") >= "2010-12-01"))
+
+# this DF will now have a column for every combination of country
+# numeric variable and a column specifying the date.
+pivoted = dfWithDate.groupBy("date").pivot("Country").sum()
+
+pivoted.where("date > '2011-12-05'").select("date", "`USA_sum(CAST(Quantity AS BIGINT))`").show()
