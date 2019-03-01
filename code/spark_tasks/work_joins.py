@@ -1,7 +1,7 @@
 from pyspark.sql.types import StructField, StructType, StringType, LongType
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
-from pyspark.sql.functions import expr
+from pyspark.sql.functions import expr, broadcast
 from pyspark.sql import Row
 
 
@@ -99,6 +99,7 @@ person.withColumnRenamed("id", "personId")\
 # problem to refer to a specific column when you have DF with duplicate column names
 
 
+person.join(broadcast(graduateProgram), joinExpression).explain()
 
 
 
