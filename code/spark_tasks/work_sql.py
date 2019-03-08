@@ -64,3 +64,45 @@ spark.sql("""SHOW FUNCTIONS""")
 # SHOW USER FUNCTIONS
 # SHOW FUNCTIONS "s*";
 # DESCRIBE returns info
+
+# query is uncorrelated because it does not include any
+# information from the outer scope of the query
+spark.sql("""SELECT * FROM flights
+    WHERE origin_country_name IN (SELECT dest_country_name FROM flights
+        GROUP BY dest_country_name ORDER BY sum(count) DESC LIMIT 5)
+""")
+
+# correlated predicate subqueries allow you to use
+# information from the outer scope in your inner query
+spark.sql("""SELECT * FROM flights f1
+    WHERE EXISTS (SELECT 1 FROM flights f2
+        WHERE f1.dest_country_name = f2.origin_country_name)
+    AND EXISTS (SELECT 1 FROM flights f2
+        WHERE f2.dest_country_name = f1.origin_country_name)
+""")
+
+# using uncorrelated scalar queries you can bring in some supplemental
+# information that you might not have previously. For example if you
+# wanted to include the maximum value as its own column :
+spark.sql("""SELECT *, (SELECT max(count) FROM flights)
+    AS maximum FROM flights""").show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
