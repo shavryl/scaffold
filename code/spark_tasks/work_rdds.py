@@ -31,9 +31,22 @@ words2.filter(lambda record: record[2]).take(5)
 # sometimes each current row should return multiple rows instead
 # for example you might want to take your set of words and flatmap
 # it into a set of characters.
-ttr = words.flatMap(lambda word: list(word)).take(5)
+words.flatMap(lambda word: list(word)).take(5)
 
+# to sort an RDD you must use the sortBy method and just like any
+# other RDD operation you do this by specifying a function to extract
+# a value from the objects in your RDDs and then sort based on that.
+words.sortBy(lambda word: len(word) * -1).take(2)
 
+spark.sparkContext.parallelize(range(1, 21)).reduce(lambda x, y: x + y)
+
+def wordLengthReducer(leftWord, rightWord):
+    if len(leftWord) > len(rightWord):
+        return leftWord
+    else:
+        return rightWord
+
+ttr = words.reduce(wordLengthReducer)
 
 
 print(ttr)
