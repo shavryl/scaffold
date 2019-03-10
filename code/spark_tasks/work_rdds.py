@@ -46,12 +46,38 @@ def wordLengthReducer(leftWord, rightWord):
     else:
         return rightWord
 
-ttr = words.reduce(wordLengthReducer)
+words.reduce(wordLengthReducer)
+
+words.map(lambda word: (word.lower(), 1))
+keyword = words.keyBy(lambda word: word.lower()[0])
+
+keyword.mapValues(lambda word: word.upper()).collect()
+keyword.flatMapValues(lambda word: word.upper()).collect()
+
+keyword.keys().collect()
+keyword.values().collect()
+keyword.lookup('s')
+
+
+chars = words.flatMap(lambda word: word.lower())
+KVcharacters = chars.map(lambda letter: (letter, 1))
+def maxFunc(left, right):
+    return max(left, right)
+
+def addFunc(left, right):
+    return left + right
+
+nums = sc.parallelize(range(1, 31), 5)
+
+
+
+
+
+
+
 
 
 print(ttr)
-
-
 
 
 
