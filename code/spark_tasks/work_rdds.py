@@ -88,6 +88,65 @@ nums.treeAggregate(0, maxFunc, addFunc, depth)
 # it does it by key, follows the same properties
 KVcharacters.aggregateByKey(0, addFunc, maxFunc).collect()
 
+# this combiner operates on a given key and merges the values according to
+# some function. It then goes to merge the different outputs of the combiners
+# to give us result. We can specify the number of output partitions
+def valToCombiner(value):
+    return [value]
+
+def mergeValuesFunc(vals, valToAppend):
+    vals.append(valToAppend)
+    return vals
+
+def mergeCombinerFunc(vals1, vals2):
+    return vals1 + vals2
+
+outputPartitions = 6
+KVcharacters.combineByKey(
+    valToCombiner,
+    mergeValuesFunc,
+    mergeCombinerFunc,
+    outputPartitions
+).collect()
+
+
+# CoGroups give you the ability to group together two key-value RDDS
+# this joins the given values by key. THis is effectively just a group-based
+# join on an RDD. When doing this, you can also specify a number of output
+# partitions or a custom partitioning function to control exactly how this
+# data is distributed across the cluster
+import random
+distinctChars = words.flatMap(lambda word: word.lower()).distinct()
+charRDD = distinctChars.map(lambda c: (c, random.random()))
+charRDD2 = distinctChars.map(lambda c: (c, random.random()))
+charRDD.cogroup(charRDD2).take(5)
+
+# example of inner join on RDDs
+keyedChars = distinctChars.map(lambda c: (c, random.random()))
+outputPartitions = 10
+KVcharacters.join(keyedChars).count()
+KVcharacters.join(keyedChars, outputPartitions).count()
+
+# zip creates PairRDD. The two RDDs must have the same number of
+# partitions as well as the same number of elements:
+numRange = sc.parallelize(range(10), 2)
+words.zip(numRange).collect()
+
+# coalesce effectively collapses partitions on the same worker
+# in order to avoid a shuffle of the data then repartitioning
+words.coalesce(1).getNumPartitions()
+
+# the repartition operation allows you to repartition your data
+# up or down but performs a shuffle across nodes in the process.
+# increasing the number of partitions can increase the level of
+# parallelism when operating in map- and filter-type operations
+words.repartition(10)
+
+
+
+
+
+
 
 
 print(ttr)
