@@ -1,5 +1,6 @@
 from pyspark.context import SparkContext
 from pyspark.sql.session import SparkSession
+from functools import reduce
 
 
 sc = SparkContext('local')
@@ -15,12 +16,10 @@ words = spark.sparkContext.parallelize(myCollection, 2)
 words.setName("myWords")
 words.name()
 
-
 def startsWithS(individual):
     return individual.startswith("S")
 
 words.filter(lambda word: startsWithS(word)).collect()
-
 
 # you specify a function that returns the value that you want, given input
 words2 = words.map(lambda word: (word, word[0], word.startswith('S')))
@@ -58,7 +57,6 @@ keyword.keys().collect()
 keyword.values().collect()
 keyword.lookup('s')
 
-
 chars = words.flatMap(lambda word: word.lower())
 KVcharacters = chars.map(lambda letter: (letter, 1))
 def maxFunc(left, right):
@@ -69,11 +67,26 @@ def addFunc(left, right):
 
 nums = sc.parallelize(range(1, 31), 5)
 
+KVcharacters.countByKey()
 
+KVcharacters.groupByKey().map(lambda row: (row[0], reduce(addFunc, row[1]))).collect()
 
+KVcharacters.reduceByKey(addFunc).collect()
 
+# requires a null and start value and then requires you to specify
+# two different functions. The first aggregates within partitions
+# the second aggregates across partitions
+nums.aggregate(0, maxFunc, addFunc)
 
+# does the same as aggregate but does so in a different way. It basically
+# 'pushes down' some of the subaggregations (creating a tree from executor
+# to executor) before performing the final aggregation on the driver
+depth = 3
+nums.treeAggregate(0, maxFunc, addFunc, depth)
 
+# same as aggregate but instead doing it partition by partition
+# it does it by key, follows the same properties
+KVcharacters.aggregateByKey(0, addFunc, maxFunc).collect()
 
 
 
