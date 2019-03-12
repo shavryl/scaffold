@@ -142,11 +142,16 @@ words.coalesce(1).getNumPartitions()
 # parallelism when operating in map- and filter-type operations
 words.repartition(10)
 
+supplementalData = {"Spark": 1000, "Definitive": 200,
+                    "Big": -300, "Simple": 100}
 
+suppBroadcast = spark.sparkContext.broadcast(supplementalData)
 
-
-
-
+# we will create a key-value pair according to the value we might
+# have in the map. If we lack the value we will replace it with 0:
+ttr = words.map(lambda word: (word, suppBroadcast.value.get(word, 0)))\
+    .sortBy(lambda wordPair: wordPair[1])\
+    .collect()
 
 
 print(ttr)
