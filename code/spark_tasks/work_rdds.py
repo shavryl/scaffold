@@ -149,9 +149,38 @@ suppBroadcast = spark.sparkContext.broadcast(supplementalData)
 
 # we will create a key-value pair according to the value we might
 # have in the map. If we lack the value we will replace it with 0:
-ttr = words.map(lambda word: (word, suppBroadcast.value.get(word, 0)))\
+words.map(lambda word: (word, suppBroadcast.value.get(word, 0)))\
     .sortBy(lambda wordPair: wordPair[1])\
     .collect()
+
+
+flights = spark.read.parquet("data/2010-summary.parquet")
+accChina = spark.sparkContext.accumulator(0)
+
+def accChinaFunc(flight_row):
+    destination = flight_row["DEST_COUNTRY_NAME"]
+    origin = flight_row["ORIGIN_COUNTRY_NAME"]
+    if destination == "China":
+        accChina.add(flight_row["count"])
+    if origin == "China":
+        accChina.add(flight_row["count"])
+
+# iterate over every row in our flights dataset via the foreach method
+# The reason for this is because foreach is an action and Spark can provide
+# guarantees that perform only inside of actions.
+# The foreach method will run once for each row in the input DF (assuming
+# that we did not filter it) and will run our function against each row,
+# incrementing the accumulator accordingly:
+flights.foreach(lambda flight_row: accChinaFunc(flight_row))
+
+
+ttr = accChina.value
+
+
+
+
+
+
 
 
 print(ttr)
