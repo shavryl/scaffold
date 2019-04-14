@@ -29,3 +29,4 @@ env*/
 venv/
 .cache/
 .python-version
+.pytest_cache
