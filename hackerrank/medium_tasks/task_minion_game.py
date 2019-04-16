@@ -4,8 +4,28 @@
 class Player():
     points = 0
 
+    letters_of_type = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    the_string = 'ARTDDSEERSNNSDEERRTTEEW'
+
     def add_point(self, num):
         self.points = self.points + num
+
+    def get_index(self):
+        indexes = []
+        for letter in self.letters_of_type:
+            # there is a problem that it finds only first index
+            indexed = self.the_string.find(letter)
+            if indexed >= 0:
+                indexes.append(indexed)
+        return indexes
+
+
+
+    def build_words(self, string):
+        for letter in self.letters_of_type:
+            ...
+
+
 
 
 class Kevin(Player):
@@ -16,9 +36,10 @@ class Stuart(Player):
     letters_of_type = 'BCDFGHJKLMNPVWXZ'
 
 
+class Competition():
 
-class Competition(player1, player2, string):
-    ...
+    def pass_it(self):
+        ...
 
 def generate_words(index, string):
     list_of_words = []
@@ -47,10 +68,4 @@ def generate_words(index, string):
 
 def add_points(list_of_words, player):
     for word in list_of_words:
-        for word in string:
             ...
-
-
-if __name__ == '__main__':
-    s = input()
-    Competition(Kevin, Stuart, s)
