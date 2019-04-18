@@ -37,17 +37,21 @@ class Player():
         return list_of_words
 
     def count_points(self, list_of_words):
+        # the trouble is with count
+        # couse it takes first accurance as 0
+        # but should assign 1 to get right sum
         for word in list_of_words:
-            self.points += self.the_string.count(word)
+            num = self.the_string.count(word)
+            self.points + num
         return self.points
 
 
 class Kevin(Player):
-    letters_of_type = 'AEIOUY'
+    letters_of_type = 'AEIOU'
 
 
 class Stuart(Player):
-    letters_of_type = 'BCDFGHJKLMNPVWXZ'
+    letters_of_type = 'BCDFGHJKLMNPVWXYZ'
 
 
 class Competition():
@@ -67,8 +71,12 @@ class Competition():
         result_Stuart = self.calculate_for_player(self.player_two)
 
         if result_Kevin > result_Stuart:
-            return 'Kevin wins'
-        elif result_Kevin == result_Stuart:
-            return 'This is Draw!'
+            print("Kevin %s" % result_Kevin)
+        elif result_Kevin < result_Stuart:
+            print("Stuart %s" % result_Stuart)
         else:
-            return 'Stuart wins!'
+            return 'This is Draw!'
+
+
+dd = Competition('BANANA')
+dd.compare_result()
