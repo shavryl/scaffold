@@ -7,9 +7,6 @@ class Player():
     letters_of_type = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     the_string = 'ARTDDSEERSNNSDEERRTTEEW'
 
-    def add_point(self, num):
-        self.points = self.points + num
-
     def get_index(self):
         result_list = []
         for character in self.letters_of_type:
@@ -17,39 +14,32 @@ class Player():
             for index, letter in enumerate(self.the_string):
                 if letter == character:
                     index_list.append(index)
-                    print(index, result_list)
             if index_list:
                 result_list.append(index_list)
         return result_list
 
-    def build_words(self, result_list):
-        # take index in result_list
-        # by index select letter from the_string
-        # create first word with this 1 letter
-        # iterate and add next letters to it
-        # save as seperate words
+    def build_words(self, result_list, the_string):
         list_of_words = []
         for index in result_list:
-            for nested in index:
-                _next = nested + 1
-                first_letter = self.the_string[nested]
-                substring = self.the_string[_next:]
-                list_of_words.append(first_letter)
+            try:
+                for nested in index:
+                    _next = nested + 1
+                    first_letter = the_string[nested]
+                    substring = the_string[_next:]
 
-                for letter in substring:
-                    # take last word in list
-                    # add letter to it and save
-                    last_word = list_of_words[-1]
-                    new_word = last_word + letter
-                    list_of_words.append(new_word)
-
+                    list_of_words.append(first_letter)
+                    for letter in substring:
+                        last_word = list_of_words[-1]
+                        new_word = last_word + letter
+                        list_of_words.append(new_word)
+            except IndexError:
+                continue
         return list_of_words
 
     def count_points(self, list_of_words):
-        # get list of words
-        # compare every word to the_string
-        # get 1 point for every equal
-        ...
+        for word in list_of_words:
+            self.points += self.the_string.count(word)
+        return self.points
 
 
 class Kevin(Player):
@@ -62,5 +52,23 @@ class Stuart(Player):
 
 class Competition():
 
-    def pass_it(self):
-        ...
+    def __init__(self, the_string):
+        self.the_string = the_string
+        self.player_one = Kevin()
+        self.player_two = Stuart()
+
+    def calculate_for_player(self, player):
+        result_list = player.get_index()
+        list_of_words = player.build_words(result_list, self.the_string)
+        return player.count_points(list_of_words)
+
+    def compare_result(self):
+        result_Kevin = self.calculate_for_player(self.player_one)
+        result_Stuart = self.calculate_for_player(self.player_two)
+
+        if result_Kevin > result_Stuart:
+            return 'Kevin wins'
+        elif result_Kevin == result_Stuart:
+            return 'This is Draw!'
+        else:
+            return 'Stuart wins!'
