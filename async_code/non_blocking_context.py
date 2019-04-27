@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import asyncio
 
 
 @asynccontextmanager
@@ -13,4 +14,4 @@ async def web_page(url):
 
 async with web_page('google.com') as data:
     process(data)
-
+    ...
