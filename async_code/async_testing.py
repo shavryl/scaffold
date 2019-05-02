@@ -1,5 +1,6 @@
 import asyncio
 from typing import Callable
+from itertools import zip_longest
 
 
 
@@ -17,3 +18,33 @@ async def f(notify: Callable[[str], None]):
     loop.call_soon(notify, 'Alert!')
     ...
 
+
+ls = range(40)
+res = list(ls)
+
+
+def func3():
+    reslist = []
+
+    for x in ls:
+        if x % 3 != 0:
+            reslist.append(x)
+
+    return reslist
+
+
+def func2():
+    reslist = []
+
+    for x in ls:
+        if x % 2 != 0:
+            reslist.append(x)
+
+    return reslist
+
+l1, l2, l3 = func3(), func2(), res
+
+result = zip_longest(l1, l2, l3)
+for i in result:
+
+    print(i)
