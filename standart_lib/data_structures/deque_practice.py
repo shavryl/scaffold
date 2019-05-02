@@ -12,11 +12,10 @@ print(d)
 
 # add to the right
 d1 = collections.deque()
-print(d1)
+
 d1.extend('ipqrstuvwxyz')
-print(d1)
+
 d1.append('1')
-print(d1)
 
 
 # add to the left
@@ -24,12 +23,12 @@ d2 = collections.deque()
 # iterates over input and performs equivalent of an appendleft()
 # for each item. The result is the input sequence in reverse order
 d2.extendleft(range(6))
-print(d2)
+
 d2.appendleft('17')
-print(d2)
+
 
 # deques are thread safe
-candle = collections.deque(range(50))
+candle = collections.deque(range(1))
 
 def burn(direction, nextSource):
     while True:
@@ -43,7 +42,6 @@ def burn(direction, nextSource):
     print('{:>8} done'.format(direction))
     return
 
-
 left = threading.Thread(target=burn,
                         args=('Left', candle.popleft))
 right = threading.Thread(target=burn,
@@ -54,3 +52,14 @@ right.start()
 
 left.join()
 right.join()
+
+
+rr = collections.deque(range(10))
+print(rr)
+# takes 4 from right end to add them to left end
+rr.rotate(4)
+print(rr)
+# takes 4 from the left end to add them to the right
+rr.rotate(-4)
+print(rr)
+
