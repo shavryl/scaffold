@@ -12,4 +12,3 @@ for i in values:
     position = bisect.bisect(l, i)
     bisect.insort(l, i)
     print('{:3}  {:3}'.format(i, position), l)
-
