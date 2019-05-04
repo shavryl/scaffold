@@ -1,4 +1,5 @@
 import weakref
+import sys
 
 
 class ExpensiveObject:
@@ -16,9 +17,18 @@ def callback(reference):
     """
     print('callback({!r}'.format(reference))
 
+def on_finalize(*args):
+    print('on_finalize({!r})'.format(args))
+
 
 obj = ExpensiveObject()
 r = weakref.ref(obj, callback)
+f = weakref.finalize(obj, on_finalize, 'extra argument')
+# finalize instance has a writable propertly atexit to
+# control whether the callback is invoked as a program
+# is exiting, if it hasn't already been called.
+f.atexit = bool(int(sys.argv[1]))
+
 
 print(obj)
 print(r)
