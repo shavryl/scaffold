@@ -5,11 +5,15 @@ from math import ceil
 
 def rounding(grade):
 
-    for i in range(2):
-        if grade % 5 != 0:
-            grade +=1
+    base = 5
+    new_number = base * ceil(grade/base)
 
-    return grade
+    if new_number - grade < 3:
+        result = new_number
+    else:
+        result = grade
+
+    return result
 
 
 
@@ -17,8 +21,8 @@ def gradingStudents(grades):
 
     result_list = []
 
-    [result_list.append(rounding(grade))
-        for grade in grades if grade >= 38]
+    [result_list.append(rounding(grade)) if grade >=38
+     else result_list.append(grade) for grade in grades]
 
     return result_list
 
