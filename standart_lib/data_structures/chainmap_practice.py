@@ -1,4 +1,5 @@
 import collections
+from collections import ChainMap
 
 
 a = {'a': 'A', 'c': 'C'}
@@ -29,3 +30,47 @@ tm = collections.ChainMap(a, b)
 tm2 = tm.new_child(c)
 # or another way
 tm3 = collections.ChainMap(c, *tm.maps)
+
+
+class DeepChainMap(ChainMap):
+    """
+    The ChainMap class only makes updates (writes and deletions)to the first
+    mapping in the chain while lookups will search the full chain. However,
+    if deep writes and deletions are desired, it is easy to make a subclass
+    that updates keys found deeper in the chain:
+    """
+    def __setitem__(self, key, value):
+        for mapping in self.maps:
+            if key in mapping:
+                mapping[key] = value
+                return
+        self.maps[0][key] = value
+
+    def __delitem__(self, key):
+        for mapping in self.maps:
+            if key in mapping:
+                del mapping[key]
+                return
+        raise KeyError(key)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
