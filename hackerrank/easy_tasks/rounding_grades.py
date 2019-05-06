@@ -16,7 +16,6 @@ def rounding(grade):
     return result
 
 
-
 def gradingStudents(grades):
 
     result_list = []

@@ -11,4 +11,3 @@ def test_grading():
     pprint(result)
 
     assert result == expected
-

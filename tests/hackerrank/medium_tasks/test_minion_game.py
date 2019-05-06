@@ -16,9 +16,8 @@ list_of_words = [
 
 class TestPlayer():
 
-    _player = Player()
-
     the_string = 'ARTDDSEERSNNSDEERRTTEEW'
+    _player = Player(the_string)
 
     def test_get_index(self):
         expected = result_list
