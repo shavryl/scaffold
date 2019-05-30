@@ -23,3 +23,22 @@ print('arg values:', vals)
 l.reverse()
 print('reversed :', l)
 print('sorted :', sorted(l, key=g))
+
+
+
+ll = [dict(val=-1 * i) for i in range(4)]
+print('Dictionaries:')
+print('  original:', l)
+g = itemgetter('val')
+vals = [g(i) for i in ll]
+print('    values:', vals)
+print('    sorted:', sorted(ll, key=g))
+
+print()
+ll = [(i, i * -2) for i in range(4)]
+print('\nTuples:')
+print('  original:', ll)
+g = itemgetter(1)
+vals = [g(i) for i in ll]
+print('   values:', vals)
+print('   sorted:', sorted(ll, key=g))
