@@ -14,4 +14,3 @@ class StrKeyDictBetter(collections.UserDict):
 
     def __setitem__(self, key, item):
         self.data[str(key)] = item
-
