@@ -20,3 +20,16 @@ def make_averager():
         return total/len(series)
 
     return averager
+
+
+def make_averager_nonlocal():
+    count = 0
+    total = 0
+
+    def avereger(new_value):
+        nonlocal count, total
+        count += 1
+        total += new_value
+        return total / count
+
+    return avereger
