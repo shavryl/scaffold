@@ -73,17 +73,6 @@ class LargeOrderPromo(Promotion):
     """
     def discount(self, order):
         distinct_items = {item.product for item in order.cart}
-        if len(distinct_items) >=10:
+        if len(distinct_items) >= 10:
             return order.total() * .07
         return 0
-
-
-
-
-
-
-
-
-
-
-
