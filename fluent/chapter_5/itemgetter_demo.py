@@ -1,6 +1,7 @@
-from operator import itemgetter, attrgetter, methodcaller
+from operator import itemgetter, attrgetter, methodcaller, mul
 from pprint import pprint
 from collections import namedtuple
+from functools import partial
 
 
 metro_data = [
@@ -32,3 +33,7 @@ print(upcase(s))
 
 hiphenate = methodcaller('replace', ' ', '-')
 print(hiphenate(s))
+
+triple = partial(mul, 3)
+triple_res = [triple(num) for num in range(1, 10)]
+print(triple_res)
