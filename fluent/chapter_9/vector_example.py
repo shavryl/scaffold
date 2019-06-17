@@ -3,11 +3,13 @@ import math
 
 
 class Vector2d:
+    __slots__ = ('__x', '__y')
+
     typecode = 'd'
 
     def __init__(self, x, y):
-        self.x = float(x)
-        self.y = float(y)
+        self.__x = float(x)
+        self.__y = float(y)
 
     def __iter__(self):
         # makes a class iterable; this is what makes unpacking work
@@ -45,6 +47,9 @@ class Vector2d:
         components = (format(c, format_spec) for c in coords)
         return outer_format.format(*components)
 
+    def __hash__(self):
+        return hash(self.x) ^ hash(self.y)
+
     @classmethod
     def frombytes(cls, octets):
         # read the typecode from the first byte
@@ -52,6 +57,14 @@ class Vector2d:
         # create a memoryview from the octets binary sequence
         memv = memoryview(octets[1:]).cast(typecode)
         return cls(*memv)
+
+    @property
+    def x(self):
+        return self.__x
+
+    @property
+    def y(self):
+        return self.__y
 
     def angle(self):
         return math.atan2(self.y, self.x)
