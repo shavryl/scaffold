@@ -1,6 +1,7 @@
 from array import array
 import reprlib
 import math
+import numbers
 
 
 class Vector:
@@ -37,7 +38,14 @@ class Vector:
         return len(self._componenets)
 
     def __getitem__(self, index):
-        return self._componenets[index]
+        cls = type(self)
+        if isinstance(index, slice):
+            return cls(self._componenets[index])
+        elif isinstance(index, numbers.Integral):
+            return self._componenets[index]
+        else:
+            msg = '{cls.__name__} indices must be integers'
+            raise TypeError(msg.format(cls=cls))
 
     @classmethod
     def frombytes(cls, octets):
