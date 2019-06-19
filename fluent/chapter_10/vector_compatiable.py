@@ -2,6 +2,8 @@ from array import array
 import reprlib
 import math
 import numbers
+import functools
+import operator
 
 
 class Vector:
@@ -70,6 +72,13 @@ class Vector:
                 msg = error.format(cls_name=cls.__name__, attr_name=name)
                 raise AttributeError(msg)
         super().__setattr__(name, value)
+
+    def __hash__(self):
+        # in 3.+ map is lazy so it equals generator expression
+        hashes = map(hash, self._componenets)
+        # using reduce provide third argument - initializer, to prevent
+        # 'the empty sequence with no initial value' exception
+        return functools.reduce(operator.xor, hashes, 0)
 
     @classmethod
     def frombytes(cls, octets):
