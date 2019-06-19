@@ -6,6 +6,7 @@ import numbers
 
 class Vector:
     typecode = 'd'
+    shortcut_names = 'xyzt'
 
     def __init__(self, components):
         self._componenets = array(self.typecode, components)
@@ -46,6 +47,29 @@ class Vector:
         else:
             msg = '{cls.__name__} indices must be integers'
             raise TypeError(msg.format(cls=cls))
+
+    def __getattr__(self, name):
+        cls = type(self)
+        if len(name) == 1:
+            pos = cls.shortcut_names.find(name)
+            if 0 <= pos < len(self._componenets):
+                return self._componenets[pos]
+        msg = '{.__name__!r} object has no attribute {!r}'
+        raise AttributeError(msg.format(cls, name))
+
+    def __setattr__(self, name, value):
+        cls = type(self)
+        if len(name) == 1:
+            if name in cls.shortcut_names:
+                error = 'readonly attribute {attr_name!r}'
+            elif name.islower():
+                error = "can't set attributes 'a' to 'z' in {cls_name!r}"
+            else:
+                error = ''
+            if error:
+                msg = error.format(cls_name=cls.__name__, attr_name=name)
+                raise AttributeError(msg)
+        super().__setattr__(name, value)
 
     @classmethod
     def frombytes(cls, octets):
