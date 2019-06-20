@@ -29,7 +29,12 @@ class Vector:
                 bytes(self._componenets))
 
     def __eq__(self, other):
-        return tuple(self) == tuple(other)
+        if len(self) != len(other):
+            return False
+        for a, b in zip(self, other):
+            if a != b:
+                return False
+        return True
 
     def __abs__(self):
         return math.sqrt(sum(x * x for x in self))
