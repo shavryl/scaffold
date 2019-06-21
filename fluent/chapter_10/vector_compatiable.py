@@ -4,6 +4,7 @@ import math
 import numbers
 import functools
 import operator
+import itertools
 
 
 class Vector:
@@ -85,8 +86,46 @@ class Vector:
         # 'the empty sequence with no initial value' exception
         return functools.reduce(operator.xor, hashes, 0)
 
+    def __format__(self, format_spec=''):
+        if format_spec.endswith('h'):
+            format_spec = format_spec[:-1]
+            coords = itertools.chain([abs(self)],
+                                     self.angles())
+            outer_format = '<{}>'
+        else:
+            coords = self
+            outer_format = '({})'
+        components = (format(c, format_spec) for c in coords)
+        return outer_format.format(', '.join(components))
+
     @classmethod
     def frombytes(cls, octets):
         typecode = chr(octets[0])
         memv = memoryview(octets[1:]).cast(typecode)
         return cls(memv)
+
+    def angle(self, n):
+        r = math.sqrt(sum(x * x for x in self[n:]))
+        a = math.atan2(r, self[n-1])
+        if (n == len(self) - 1) and (self[-1] < 0):
+            return math.pi * 2 - a
+        else:
+            return a
+
+    def angles(self):
+        return (self.angle(n) for n in range(1, len(self)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
