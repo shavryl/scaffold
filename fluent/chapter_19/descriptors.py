@@ -1,24 +1,23 @@
 
 
 
+class Quantity:
 
+    def __init__(self, storage_name):
+        self.storage_name = storage_name
 
-def quantity(storage_name):
-    def qty_getter(instance):
-        return instance.__dict__[storage_name]
-
-    def qty_setter(instance, value):
+    def __set(self, instance, value):
         if value > 0:
-            instance.__dict__[storage_name] = value
+            # trying to use the setattr would trigger the __set__
+            # method again leading to infinite recursion
+            instance.__dict__[self.storage_name] = value
         else:
             raise ValueError('value must be > 0')
 
-    return property(qty_getter, qty_setter)
-
 
 class LineItem:
-    weight = quantity('weight')
-    price = quantity('price')
+    weight = Quantity('weight')
+    price = Quantity('price')
 
     def __init__(self, description, weight, price):
         self.description = description
@@ -27,5 +26,3 @@ class LineItem:
 
     def subtotal(self):
         return self.weight * self.price
-
-
