@@ -33,4 +33,3 @@ def supervisor():
     # result = yield from slow_function()
     # spinner.cancel()
     # return result
-
