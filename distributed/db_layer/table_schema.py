@@ -5,6 +5,7 @@ from sqlalchemy import (Table, Column, Integer,
                         CheckConstraint)
 from datetime import datetime
 from sqlalchemy import DateTime
+from sqlalchemy import create_engine
 
 
 metadata = MetaData()
@@ -42,3 +43,6 @@ line_items = Table('line_items', metadata,
                    Column('cookie_id', ForeignKey('cookies.cookie_id')),
                    Column('extended_cost', Numeric(12, 2))
                    )
+
+engine = create_engine('sqlite:///mydb.db')
+metadata.create_all(engine)
