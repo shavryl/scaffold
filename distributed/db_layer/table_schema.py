@@ -45,4 +45,5 @@ line_items = Table('line_items', metadata,
                    )
 
 engine = create_engine('sqlite:///mydb.db')
+connection = engine.connect()
 metadata.create_all(engine)

@@ -1,15 +1,9 @@
 from sqlalchemy import insert
-from distributed.db_layer.table_schema import cookies, engine
+from distributed.db_layer.table_schema import cookies, engine, connection
 from pprint import pprint
 
 
-ins = cookies.insert().values(
-    cookie_name='chocolate chip',
-    cookie_recipe_url='http://bla.bla/recipe.html',
-    cookie_sku='CC01',
-    quantity='12',
-    unit_cost='0.50'
-)
+ins = cookies.insert()
 
 inventory_list = [
     {
@@ -28,7 +22,7 @@ inventory_list = [
     }
 ]
 
-connection = engine.connect()
+
 result = connection.execute(ins, inventory_list)
 
 pprint(result)
