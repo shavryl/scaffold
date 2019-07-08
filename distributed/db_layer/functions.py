@@ -1,4 +1,5 @@
 from sqlalchemy.sql import select, func, insert, update
+from sqlalchemy.exc import IntegrityError
 from distributed.db_layer.table_schema import engine, cookies, connection, orders, users, line_items
 from pprint import pprint
 
@@ -22,12 +23,20 @@ def get_orders_by_customers(cust_name, shipped=None, details=False):
 def ship_it(order_id):
     s = select([line_items.c.cookie_id, line_items.c.quantity])
     s = s.where(line_items.c.order_id == order_id)
-    cookies_to_ship = connection.execute(s)
-    for cookie in cookies_to_ship:
-        u = update(cookies).where(cookies.c.cookie_id == cookie.cookie_id)
-        u = u.values(quantity = cookies.c.quantity - cookie.quantity)
+
+    transaction = connection.begin()
+    cookies_to_ship = connection.execute(s).fetchall()
+
+    try:
+        for cookie in cookies_to_ship:
+            u = update(cookies).where(cookies.c.cookie_id == cookie.cookie_id)
+            u = u.values(quantity = cookies.c.quantity - cookie.quantity)
+            result = connection.execute(u)
+        u = update(orders).where(orders.c.order_id == order_id)
+        u = u.values(shipped=True)
         result = connection.execute(u)
-    u = update(orders).where(orders.c.order_id == order_id)
-    u = u.values(shipped=True)
-    result = connection.execute(u)
-    print("Shipped order ID: {}".format(order_id))
+        print("Shipped order ID: {}".format(order_id))
+        transaction.commit()
+    except IntegrityError as error:
+        transaction.rollback()
+        print(error)
