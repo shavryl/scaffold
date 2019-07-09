@@ -11,7 +11,7 @@ Base = declarative_base()
 
 
 class Cookie(Base):
-    __tablename__ = 'cookies'
+    __tablename__ = 'new_cookies'
     __table_args__ = (CheckConstraint('quantity >= 0', name='quantity_positive'),)
 
     cookie_id = Column(Integer, primary_key=True)
