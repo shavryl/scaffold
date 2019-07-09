@@ -7,7 +7,7 @@ session = Session()
 
 from datetime import datetime
 from sqlalchemy import (Table, Column, Integer, Numeric, String, DateTime,
-                        ForeignKey, Boolean)
+                        ForeignKey, Boolean, CheckConstraint)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
@@ -16,6 +16,7 @@ Base = declarative_base()
 
 class Cookie(Base):
     __tablename__ = 'cookies'
+    __table_args__ = (CheckConstraint('quantity >= 0', name='quantity_positive'),)
 
     cookie_id = Column(Integer, primary_key=True)
     cookie_name = Column(String(50), index=True)
@@ -97,3 +98,16 @@ class LineItem(Base):
                     self=self)
 
 Base.metadata.create_all(engine)
+
+cookiemon = User('cookiemon', 'mon@cookie.com', '111-111-1111', 'password')
+cc = Cookie('chocolate chip', 'http://some.aweso.me/cookie/recipe.html',
+            'CC01', 12, 0.50)
+
+
+dcc = Cookie('dark chocolate chip',
+             'http://some.aweso.me/cookie/recipe_dark.html',
+             'CC02', 1, 0.75)
+
+session.add(cookiemon)
+session.add(cc)
+session.add(dcc)
