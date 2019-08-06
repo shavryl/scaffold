@@ -13,9 +13,6 @@ class Hangman(object):
         self.word = word
         self.masked_word = '_' * len(self.word)
 
-    def prepare_data(self):
-        return list(enumerate(self.word))
-
     def guess(self, char):
         indexes = [pos for pos, _char in enumerate(self.word) if _char == char]
         if indexes:
@@ -24,20 +21,16 @@ class Hangman(object):
                 letters_list[index] = char
             self.masked_word = ''.join(letters_list)
         else:
-            if self.remaining_guesses > 0:
+            if self.remaining_guesses == 0:
+                raise ValueError()
+            elif self.remaining_guesses == 1:
+                self.status = STATUS_LOSE
                 self.remaining_guesses -= 1
             else:
-                self.status = STATUS_LOSE
-                return self.status
-
+                self.remaining_guesses -= 1
 
     def get_masked_word(self):
         return self.masked_word
 
     def get_status(self):
-        if self.remaining_guesses > 0:
-            return self.status
-
-
-
-
+        return self.status
