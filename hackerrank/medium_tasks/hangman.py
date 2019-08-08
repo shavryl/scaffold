@@ -21,17 +21,14 @@ class Hangman(object):
                 if letters_list[index] == char:
                     self.remaining_guesses -= 1
                     break
-                else:
-                    letters_list[index] = char
+                letters_list[index] = char
             self.masked_word = ''.join(letters_list)
         else:
-            if self.remaining_guesses == -1 or self.status == STATUS_WIN:
+            if self.status != STATUS_ONGOING:
                 raise ValueError(char)
             elif self.remaining_guesses == 0:
                 self.status = STATUS_LOSE
-                self.remaining_guesses -= 1
-            else:
-                self.remaining_guesses -= 1
+            self.remaining_guesses -= 1
 
     def get_masked_word(self):
         return self.masked_word
