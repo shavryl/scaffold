@@ -18,12 +18,16 @@ class Hangman(object):
         if indexes:
             letters_list = list(self.masked_word)
             for index in indexes:
-                letters_list[index] = char
+                if letters_list[index] == char:
+                    self.remaining_guesses -= 1
+                    break
+                else:
+                    letters_list[index] = char
             self.masked_word = ''.join(letters_list)
         else:
-            if self.remaining_guesses == 0:
-                raise ValueError()
-            elif self.remaining_guesses == 1:
+            if self.remaining_guesses == -1 or self.status == STATUS_WIN:
+                raise ValueError(char)
+            elif self.remaining_guesses == 0:
                 self.status = STATUS_LOSE
                 self.remaining_guesses -= 1
             else:
@@ -33,4 +37,6 @@ class Hangman(object):
         return self.masked_word
 
     def get_status(self):
+        if '_' not in self.masked_word:
+            self.status = STATUS_WIN
         return self.status
