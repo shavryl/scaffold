@@ -1,5 +1,6 @@
 from enum import Enum
 import time
+from abc import ABC, abstractmethod
 
 PizzaProgress = Enum('PizzaProgress', 'queued preparation baking ready')
 PizzaDough = Enum('PizzaDough', 'thin thick')
@@ -25,6 +26,24 @@ class Pizza:
         time.sleep(STEP_DELAY)
         print(f'done with the {self.dough.name} dough')
 
+
+class BuilderTemplate(ABC):
+
+    @abstractmethod
+    def prepare_dough(self):
+        ...
+
+    @abstractmethod
+    def add_sauce(self):
+        raise NotImplementedError()
+
+    @abstractmethod
+    def add_topping(self):
+        ...
+
+    @abstractmethod
+    def bake(self):
+        raise NotImplementedError()
 
 class MargaritaBuilder:
     def __init__(self):
@@ -57,6 +76,28 @@ class MargaritaBuilder:
         time.sleep(self.baking_time)
         self.progress = PizzaProgress.ready
         print('your margarita is ready')
+
+
+class CustomBuilder(BuilderTemplate):
+
+    def __init__(self):
+        self.pizza = Pizza('custom chicken')
+        self.progress = PizzaProgress.queued
+        self.baking_time = 9
+
+    def prepare_dough(self):
+        self.progress = PizzaProgress.preparation
+        self.pizza.prepare_dough(PizzaDough.thick)
+
+    def add_sauce(self):
+        ...
+
+    def add_topping(self):
+        ...
+
+    def bake(self):
+        self.progress = PizzaProgress.baking
+        self.progress = PizzaProgress.ready
 
 
 class CreamyBaconBuilder:
@@ -115,7 +156,7 @@ class Waiter:
 
 def validate_style(builders):
     try:
-        input_msg = 'What pizza would you like, [m]argarita or [c]reamy bacon? '
+        input_msg = 'What pizza would you like, [m]argarita or [c]reamy bacon or [l]ight one?'
         pizza_style = input(input_msg)
         builder = builders[pizza_style]()
         valid_input = True
@@ -127,7 +168,7 @@ def validate_style(builders):
 
 
 def main():
-    builders = dict(m=MargaritaBuilder, c=CreamyBaconBuilder)
+    builders = dict(m=MargaritaBuilder, c=CreamyBaconBuilder, l=CustomBuilder)
     valid_input = False
     while not valid_input:
         valid_input, builder = validate_style(builders)
