@@ -1,4 +1,4 @@
-import pytest
+
 from hackerrank.easy_tasks.compare_triplets import compareTriplets
 import random
 
@@ -11,11 +11,10 @@ def random_func():
         iterations -= 1
     return result
 
+list_a = random_func()
+list_b = random_func()
 
-@pytest.mark.parametrize('list_a', 'list_b', [
-    (random_func(), random_func())
-    ])
-def test_compare(list_a, list_b):
+def test_compare(a=list_a, b=list_b):
 
-    result = compareTriplets(list_a, list_b)
+    result = compareTriplets(a, b)
     print(result)
