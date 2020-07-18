@@ -1,11 +1,7 @@
-import math
+
 import os
-import random
-import re
-import sys
+
 from itertools import zip_longest
-
-
 
 
 # Complete the compareTriplets function below.
