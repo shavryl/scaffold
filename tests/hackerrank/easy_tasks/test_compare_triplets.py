@@ -1,4 +1,3 @@
-
 from hackerrank.easy_tasks.compare_triplets import compareTriplets
 import random
 
