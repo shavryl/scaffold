@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Generator
 from functools import lru_cache
 
 memo: Dict[int, int] = {0: 0, 1: 1}  # base cases
@@ -17,9 +17,26 @@ def fib2(n):
     return fib2(n - 2) + fib2(n - 1)
 
 
+def fib3(n):
+    if n == 0:
+        return n
+    last: int = 0
+    next: int = 1
+    for _ in range(1, n):
+        last, next = next, last + next
+    return next
+
+
+def fib4(n):
+    yield 0
+    if n > 0: yield 1
+    last: int = 0
+    next: int = 1
+    for _ in range(1, n):
+        last, next = next, last + next
+        yield next
 
 
 if __name__ == "__main__":
-    print(fib(5))
-    print(fib(10))
-    print(fib2(50))
+    for i in fib4(50):
+        print(i)
