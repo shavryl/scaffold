@@ -53,6 +53,10 @@ class Graph(Generic[V]):
     def neighbors_for_index(self, index: int) -> List[V]:
         return list(map(self.vertex_at, [e.v for e in self._edges[index]]))
 
+    # Look up a vertice's index and find its neighbors (convenience method)
+    def neighbors_for_vertex(self, vertex: V) -> List[V]:
+        return self.neighbors_for_index(self.index_of(vertex))
+
     # Return all of the edges associated with a vertex at some index
     def edges_for_index(self, index: int) -> List[Edge]:
         return self._edges[index]
@@ -103,3 +107,17 @@ if __name__ == "__main__":
     city_graph.add_edge_by_vertices("New York", "Philadelphia")
     city_graph.add_edge_by_vertices("Philadelphia", "Washington")
     print(city_graph)
+
+    # Reuse BFS from chapter 2 on city_graph
+    import sys
+    sys.path.insert(0, '..')
+    # so we can access the Chapter2 package in the parent directory
+    from cs_problems.search_problems.generic_search import bfs, Node, node_to_path
+
+    bfs_result: Optional[Node[V]] = bfs("Boston", lambda x: x == "Miami", city_graph.neighbors_for_vertex)
+    if bfs_result is None:
+        print("No solution found using breadth-first search!")
+    else:
+        path: List[V] = node_to_path(bfs_result)
+        print("Path from Boston to Miami:")
+        print(path)
